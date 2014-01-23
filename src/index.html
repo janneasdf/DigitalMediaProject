@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Digital media WebGL project</title>
+    <style>canvas { float: left; width: 400px; height: 400px; }</style>
+	<style>settingsPanel { float: right; width: 400px; height: 400px; }</style>
+  </head>
+  <body> 
+    <!-- Three.js & JQuery -->
+    <script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    
+	<!-- Shaders -->
+	<script id="vertexShader" type="x-shader/x-vertex">
+	  uniform float time;
+	  void main(void) {
+	    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+	  }
+	</script>
+	<script id="fragmentShader" type="x-shader/x-fragment">
+	  uniform float time;
+	  void main(void) {
+	    vec3 rgb = vec3(sin(time)/2.0, sin(time+1.0)/2.0, sin(time+2.0)/2.0);
+		rgb += vec3(0.5,0.5,0.5);
+	    gl_FragColor = vec4(rgb, 1.0);
+	  }
+    </script>
+	
+	<!-- Main -->
+	<script src="js/main.js"></script>
+  
+    <!-- Panel for choosing shaders -->
+    <settingsPanel>
+	  <div>Choose vertex shader</div>
+	  <select onchange="onVertexShaderChange()">
+	    <option value="vshader1">vertex shader 1</option>
+	    <option value="vshader2">vertex shader 2</option>
+	  </select>
+	  <div>Choose fragment shader</div>
+	  <select onchange="onFragmentShaderChange()">
+	    <option value="fshader1">fragment shader 1</option>
+	    <option value="fshader2">fragment shader 2</option>	  
+	  </select>
+	</settingsPanel>
+  
+  </body>
+</html>
