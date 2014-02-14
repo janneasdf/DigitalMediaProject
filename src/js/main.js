@@ -1,3 +1,4 @@
+/* Renderer setup */
 var width = 400;
 var height = 400;
 
@@ -8,7 +9,7 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize(width, height);
 $('body').append(renderer.domElement);
 
-// Shaders
+/* Shaders */
 var vertexShaders = {
   vshader1: $('#vertexShader1').html(),
   vshader2: $('#vertexShader2').html()
@@ -19,7 +20,7 @@ var fragmentShaders = {
   fshader2: $('#fragmentShader2').html()
 };
 
-// Mesh
+/* Mesh */
 var geometry = new THREE.CubeGeometry(1,1,1);
 var uniforms = {
   time: { type: "f", value: 1.0 }, 
@@ -35,6 +36,7 @@ scene.add( cube );
 
 camera.position.z = 5;
 
+/* Rendering loop */
 function render() {
   requestAnimationFrame(render);
   renderer.render(scene, camera);
@@ -44,6 +46,7 @@ function render() {
 }
 render();
 
+/* Shader selecting callbacks */
 function onVertexShaderChange() {
   var new_shader_name = $('#vertexShaderSelect').val();
   material.vertexShader = vertexShaders[new_shader_name];
