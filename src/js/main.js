@@ -47,8 +47,8 @@ camera.position.z = 5;
 function render() {
   requestAnimationFrame(render);
   renderer.render(scene, camera);
-  model.rotation.x += 0.01;
-  model.rotation.y += 0.01;
+  model.rotation.x += 0.1;
+  model.rotation.y += 0.1;
   uniforms.time.value += 0.1;
 }
 render();

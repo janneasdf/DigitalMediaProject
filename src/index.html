@@ -12,22 +12,31 @@
 	<!-- Vertex shaders -->
 	<script id="vertexShader1" type="x-shader/x-vertex">
 	  uniform float time;
+	  varying vec2 vUv;
 	  void main(void) {
+		vUv = uv;
 	    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 	  }
 	</script>
 	<script id="vertexShader2" type="x-shader/x-vertex">
 	  uniform float time;
+	  varying vec2 vUv;
 	  void main(void) {
+		vUv = uv;
 	    gl_Position = projectionMatrix * modelViewMatrix * vec4(position + 0.25 * (1.0+sin(time)) * normal, 1.0);
 	  }
 	</script>
 	
 	<!-- Fragment shaders -->
 	<script id="fragmentShader1" type="x-shader/x-fragment">
-	  uniform float time;
+	uniform float time;
+	varying vec2 vUv;
     void main(void) {
-      gl_FragColor = vec4(0.5, 0.5, 0.5, 0.5);
+		vec2 position = -7.77 + 2.0 * vUv;
+	    float r = abs(sin(position.x * position.y + time / 1.0));
+        float g = abs(sin(position.x * position.y + time / 2.0));
+        float b = abs(sin(position.x * position.y + time / 3.0 ));
+        gl_FragColor = vec4(r, g, b, 1.0);
     }
   </script>
 	<script id="fragmentShader2" type="x-shader/x-fragment">
