@@ -2,7 +2,7 @@
   <head>
     <title>Digital media WebGL project</title>
     <style>canvas { float: left; width: 400px; height: 400px; }</style>
-	<style>settingsPanel { float: right; width: 400px; height: 400px; }</style>
+	<style>.settingsPanel { float: right; width: 400px; height: 400px; }</style>
   </head>
   <body> 
     <!-- Three.js & JQuery -->
@@ -25,26 +25,29 @@
 	
 	<!-- Fragment shaders -->
 	<script id="fragmentShader1" type="x-shader/x-fragment">
-	  
-    </script>
+	  uniform float time;
+    void main(void) {
+      gl_FragColor = vec4(0.5, 0.5, 0.5, 0.5);
+    }
+  </script>
 	<script id="fragmentShader2" type="x-shader/x-fragment">
 	  uniform float time;
 	  void main(void) {
 	    vec3 rgb = vec3(sin(time)/2.0, sin(time+1.0)/2.0, sin(time+2.0)/2.0);
-		rgb += vec3(0.5,0.5,0.5);
+		  rgb += vec3(0.5,0.5,0.5);
 	    gl_FragColor = vec4(rgb, 1.0);
 	  }
-    </script>
+  </script>
 	
 	<!-- Main -->
 	<script src="js/main.js"></script>
   
-    <!-- Panel for choosing shaders -->
-    <settingsPanel>
+  <!-- Panel for choosing shaders -->
+  <div class="settingsPanel">
 	  <div>Choose geometry</div>
 	  <select id="geometrySelect" onchange="onGeometryChange()">
 	    <option value="cube">cube</option>
-		<option value="sphere">sphere</option>
+		  <option value="sphere">sphere</option>
 	  </select>
 	  <div>Choose vertex shader</div>
 	  <select id="vertexShaderSelect" onchange="onVertexShaderChange()">
@@ -56,7 +59,7 @@
 	    <option value="fshader1">fragment shader 1</option>
 	    <option value="fshader2">fragment shader 2</option>
 	  </select>
-	</settingsPanel>
+	</div>
   
   </body>
 </html>
