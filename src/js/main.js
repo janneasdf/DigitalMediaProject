@@ -11,7 +11,7 @@ $('body').append(renderer.domElement);
 
 /* Geometries */
 var geometries = {
-  'cube': new THREE.CubeGeometry(1,1,1),
+  'cube': new THREE.CubeGeometry(1, 1, 1),
   'sphere': new THREE.SphereGeometry(1)
 };
 // var modelGeom = ...
@@ -28,18 +28,18 @@ var fragmentShaders = {
 };
 
 /* Mesh */
-var geometry = new THREE.CubeGeometry(1,1,1);
+var geometry = new THREE.CubeGeometry(1, 1, 1);
 var uniforms = {
-  time: { type: "f", value: 1.0 }, 
-  resolution: { type: "v2", value: new THREE.Vector2() } 
+  time: { type: "f", value: 1.0 },
+  resolution: { type: "v2", value: new THREE.Vector2() }
 };
-var material = new THREE.ShaderMaterial({ 
-  uniforms: uniforms, 
+var material = new THREE.ShaderMaterial({
+  uniforms: uniforms,
   vertexShader: vertexShaders['vshader1'],
   fragmentShader: fragmentShaders['fshader1']
 });
-var model = new THREE.Mesh( geometry, material );
-scene.add( model );
+var model = new THREE.Mesh(geometry, material);
+scene.add(model);
 
 camera.position.z = 5;
 
