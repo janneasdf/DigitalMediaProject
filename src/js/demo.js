@@ -64,10 +64,14 @@ function render() {
   if (time < 20000.0 / 10) {
     if (!demo1_inited) {  // Init
       demo1_inited = true;
-      scene = new THREE.Scene();
-      demo1.geometry = new THREE.geometry();
+      scene = new THREE.Scene(); 
+	  var geom = new THREE.SphereGeometry(1);
+	  for (var i = 0; i < 1000; i++) {
+		demo1['sphere' + i] = new THREE.Mesh(geom, material);
+		scene.add(demo1['sphere' + i]);
+		demo1['sphere' + i].position.x = i * 0.1;
+	  }
     }
-
 
   } else if (time < 40000.0) {
     if (!demo2_inited) {  // Init
@@ -75,6 +79,8 @@ function render() {
       // Clear scene
       for (var c in scene.children)
         scene.remove(c);
+	  scene = new THREE.Scene();
+	  
       var model1 = new THREE.Mesh(new THREE.SphereGeometry(1), material);
       scene.add(model1);
     }
