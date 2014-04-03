@@ -61,7 +61,7 @@ function render() {
   time = (new Date()).getTime() - beginTime;
   uniforms.time.value = time;
 
-  if (time < 20000.0 / 10) {
+  if (time < 0.0 / 10) {
     if (!demo1_inited) {  // Init
       demo1_inited = true;
       scene = new THREE.Scene(); 
@@ -81,15 +81,22 @@ function render() {
         scene.remove(c);
 	  scene = new THREE.Scene();
 	  
-      var model1 = new THREE.Mesh(new THREE.SphereGeometry(1), material);
-      scene.add(model1);
+      demo2.geometry = new THREE.Geometry();
+	  for ( i = 0; i < 10000; i ++ ) {
+		var vertex = new THREE.Vector3();
+		vertex.x = 2000 * Math.random() - 1000;
+		vertex.y = 2000 * Math.random() - 1000;
+		vertex.z = 2000 * Math.random() - 1000;
+		demo2.geometry.vertices.push( vertex );
+		}
+		demo2.material = new THREE.ParticleSystemMaterial( { size: 35, sizeAttenuation: false, transparent: true, color: 0x000000 } );
+		demo2.material.color.setHSL( 1.0, 0.3, 0.7 );
+		demo2.particles = new THREE.ParticleSystem( demo2.geometry, demo2.material );
+		//demo2.particles.sortParticles = true;
+		scene.add( demo2.particles );
     }
-
-
   }
-
   requestAnimationFrame(render);
   renderer.render(scene, camera);
-
 }
 render();
