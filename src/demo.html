@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>WebGL demo</title>
+  <style>
+    canvas {
+      float: left;
+      width: 400px;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Three.js & JQuery -->
+  <script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  
+  <!-- Vertex shaders -->
+  <script id="vertexShader1" type="x-shader/x-vertex">
+    uniform float time;
+    void main(void) {
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  </script>
+
+  <!-- Fragment shaders -->
+  <script id="fragmentShader1" type="x-shader/x-fragment">
+    uniform float time;
+    void main(void) {
+      gl_FragColor = vec4(0.5, 0.5, 0.5, 0.5);
+    }
+  </script>
+
+  <!-- Scripts -->
+  <script src="js/demo.js"></script>
+
+</body>
+</html>
