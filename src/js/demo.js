@@ -1,16 +1,18 @@
 /* Renderer setup */
-var width = document.body.clientWidth-50;
-var height = width*(9.0/16.0);
+var width = window.innerWidth;
+var height = window.innerHeight;
 
-var camera = new THREE.PerspectiveCamera(75, 16.0 / 9.0, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(width, height);
 $('body').append(renderer.domElement);
 
 window.onresize = function(event) {
-	width = document.body.clientWidth-50;
-	height = width*(9.0/16.0);
+	width = window.innerWidth;
+	height = window.innerHeight;
+	camera.aspect = width/height;
+	camera.updateProjectionMatrix();
     renderer.setSize(width, height);
 };
 
@@ -63,7 +65,7 @@ function render() {
     if (!demo1_inited) {  // Init
       demo1_inited = true;
       scene = new THREE.Scene();
-      scene.add(model);
+      demo1.geometry = new THREE.geometry();
     }
 
 
