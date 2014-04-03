@@ -1,12 +1,18 @@
 /* Renderer setup */
-var width = 400;
-var height = 400;
+var width = document.body.clientWidth-50;
+var height = width*(9.0/16.0);
 
-var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(75, 16.0 / 9.0, 0.1, 1000);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(width, height);
 $('body').append(renderer.domElement);
+
+window.onresize = function(event) {
+	width = document.body.clientWidth-50;
+	height = width*(9.0/16.0);
+    renderer.setSize(width, height);
+};
 
 /* Geometries */
 var geometries = {
