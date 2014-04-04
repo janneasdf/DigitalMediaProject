@@ -163,7 +163,7 @@ function render() {
 	  
       demo2.geometry = new THREE.Geometry();
 	  demo2.colors = [];
-	  for (var i = 0; i < 5000; i ++ ) {
+	  for (var i = 0; i < 2500; i ++ ) {
 			var vertex = new THREE.Vector3();
 			vertex.x = 2000 * Math.random() - 1000;
 			vertex.y = 2000 * Math.random() - 1000;
@@ -184,7 +184,7 @@ function render() {
 	camera.position.z = 100*Math.sin(time/2000.0);
 	demo2.particles.rotation.x += 0.01;
 	demo2.particles.rotation.y -= 0.01;
-	var temp = 5000;
+	var temp = 2500;
 	while(temp--){
 		var par = demo2.geometry.vertices[temp];
 		if (par.y < -1000) {
