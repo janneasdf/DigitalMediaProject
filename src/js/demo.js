@@ -44,7 +44,11 @@ var material = new THREE.ShaderMaterial({
 });
 var model = new THREE.Mesh(geometry, material);
 
+camera.position.x = 5;
 camera.position.z = 5;
+camera.position.y = 5;
+camera.up = new THREE.Vector3(0, 1, 0);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 var beginTime = (new Date()).getTime();
 var time = 0;
@@ -56,44 +60,97 @@ var demo2_inited = false;
 
 var scene = {};
 
+function makeCubes(cube_array, geometry, cube_size, depth, origin) {
+  if (depth === 0) return;
+  if (depth === 1) {
+    for (var i = 0; i < 8; i++) {
+      var color_factor = i * 1.0 / 7.0 + 0.1;
+      var r = 0.5 + color_factor * 0.5;
+      var g = color_factor;
+      var b = color_factor;
+      var color = new THREE.Color(r, g, b);
+      var mat = new THREE.MeshBasicMaterial({ 'color': color })
+
+      var c = new THREE.Mesh(geometry, mat);
+      var x_factor = i % 2;
+      var y_factor = i < 4 ? 1 : 0;  // does cube go top or bottom
+      var z_factor = (i % 4) < 2 ? 1 : 0;
+      c.position.x = origin.x + x_factor * cube_size;
+      c.position.y = origin.y + y_factor * cube_size;
+      c.position.z = origin.z + z_factor * cube_size;
+
+      cube_array.push(c);
+    }
+
+  }
+  else {
+    for (var i = 0; i < 8; i++) {
+      var x_factor = i % 2;
+      var y_factor = i < 4 ? 1 : 0;
+      var z_factor = (i % 4) < 2 ? 1 : 0;
+      var x_displacement = cube_size * ((x_factor * 2) - 1) / 2;
+      var y_displacement = cube_size * ((y_factor * 2) - 1) / 2;
+      var z_displacement = cube_size * ((z_factor * 2) - 1) / 2;
+      var o = new THREE.Vector3(origin.x + x_displacement, origin.y + y_displacement, origin.z + z_displacement);
+      makeCubes(cube_array, geometry, cube_size / 2, depth - 1, o);
+    }
+  }
+}
+
+function initDemo1Stage(demo1, scene, numStage) {
+  var depth = numStage;
+  var cube_original_size = 1.0;
+  var cube_size = cube_original_size;
+  for (var i = 0; i < depth - 1; i++) cube_size /= 2;
+  var geom = new THREE.CubeGeometry(cube_size, cube_size, cube_size);
+
+  demo1.cubes = []
+  var origin = new THREE.Vector3(0, 0, 0);
+  makeCubes(demo1.cubes, geom, cube_original_size, depth, origin); // create all the cubes recursively
+  for (var i = 0; i < demo1.cubes.length; i++) {
+    demo1.cubes[i].userData = {};
+    demo1.cubes[i].userData.original_pos = new THREE.Vector3(0, 0, 0);
+    demo1.cubes[i].userData.original_pos.copy(demo1.cubes[i].position);
+    scene.add(demo1.cubes[i]);
+  }
+}
+
 /* Rendering loop */
 function render() {
   time = (new Date()).getTime() - beginTime;
   uniforms.time.value = time;
 
-  if (time < 0.0) {
+  if (time < 12000.0) {  // Demo 1
     if (!demo1_inited) {  // Init
       demo1_inited = true;
-	  demo1.numObjects = 10000;
       scene = new THREE.Scene();
-	  
-	  var cube_size = 0.1;
-	  var geom = new THREE.CubeGeometry(cube_size, cube_size, cube_size);
-	  var mat = new THREE.MeshBasicMaterial({ 'color': 0xff0000 });
-	  var scene_size = 50;
-	  for (var i = 0; i < demo1.numObjects; i++) {
-		demo1['object' + i] = new THREE.Mesh(geom, mat);
-		scene.add(demo1['object' + i]);
-		var r = Math.random();
-		demo1['object' + i].position.x = (-1 + 2 * r) * scene_size;
-		r = Math.random();
-		demo1['object' + i].position.y = (-1 + 2 * r) * scene_size;
-		r = Math.random();
-		demo1['object' + i].position.z = (-1 + 2 * r) * scene_size;
-	  }
+
+      demo1.stage_duration = 3000.0;  // how long a stage lasts
+
+      demo1.stage = 1;
+
+      for (var c in scene.children)
+        scene.remove(c);
+      scene = new THREE.Scene();
+      initDemo1Stage(demo1, scene, demo1.stage);
     }
-	// Update
-	for (var i = 0; i < demo1.numObjects; i++) {
-	    var rem = i % 3;
-	    if (rem === 0) {
-			demo1['object' + i].rotation.x += 0.05;
-	    } else if (rem === 1) {
-			demo1['object' + i].rotation.y += 0.05;
-	    } else {
-			demo1['object' + i].rotation.z += 0.05;
-	    }
-	
-	}
+    // Update
+    for (var i = 1; i < 4; i++) {   // stage update
+      if (demo1.stage === i && time > i * demo1.stage_duration) {
+        demo1.stage = i + 1;
+        for (var c in scene.children)
+          scene.remove(c);
+        scene = new THREE.Scene();
+        initDemo1Stage(demo1, scene, demo1.stage);
+      }
+    }
+    // Cube position update
+    var amplitude = 1.5;
+    var displacement_r = 1.0 + (amplitude * (1.0 - Math.cos(time / demo1.stage_duration * Math.PI * 2)));
+    for (var i = 0; i < demo1.cubes.length; i++) {
+      demo1.cubes[i].position.copy(demo1.cubes[i].userData.original_pos);
+      demo1.cubes[i].position.multiplyScalar(displacement_r);
+    }
 
   } else if (time < 40000.0) {
     if (!demo2_inited) {  // Init
