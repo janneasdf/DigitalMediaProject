@@ -2,9 +2,9 @@
 var width = window.innerWidth;
 var height = window.innerHeight;
 
-var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 3000);
 
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({ clearAlpha: 1 });
 renderer.setSize(width, height);
 $('body').append(renderer.domElement);
 
@@ -61,7 +61,7 @@ function render() {
   time = (new Date()).getTime() - beginTime;
   uniforms.time.value = time;
 
-  if (time < 20000.0) {
+  if (time < 0.0) {
     if (!demo1_inited) {  // Init
       demo1_inited = true;
 	  demo1.numObjects = 10000;
@@ -102,21 +102,48 @@ function render() {
       for (var c in scene.children)
         scene.remove(c);
 	  scene = new THREE.Scene();
+	  scene.fog = new THREE.FogExp2( 0x000000, 0.001 );
 	  
       demo2.geometry = new THREE.Geometry();
-	  for ( i = 0; i < 10000; i ++ ) {
-		var vertex = new THREE.Vector3();
-		vertex.x = 2000 * Math.random() - 1000;
-		vertex.y = 2000 * Math.random() - 1000;
-		vertex.z = 2000 * Math.random() - 1000;
-		demo2.geometry.vertices.push( vertex );
+	  demo2.colors = [];
+	  for (var i = 0; i < 5000; i ++ ) {
+			var vertex = new THREE.Vector3();
+			vertex.x = 2000 * Math.random() - 1000;
+			vertex.y = 2000 * Math.random() - 1000;
+			vertex.z = 2000 * Math.random() - 1000;
+			vertex.velocity = new THREE.Vector3(0,-Math.random(),0);
+			demo2.geometry.vertices.push( vertex );
+			demo2.colors[i] = new THREE.Color( 0xffffff );
+			demo2.colors[i].setHSL( ( vertex.y + 1000 ) / 2000, 1, 0.5 );
 		}
-		demo2.material = new THREE.ParticleSystemMaterial( { size: 35, sizeAttenuation: false, transparent: true, color: 0x000000 } );
+		demo2.geometry.colors = demo2.colors;
+		demo2.material = new THREE.ParticleSystemMaterial( { map: THREE.ImageUtils.loadTexture(
+    "../images/particle.png"), size: 35, sizeAttenuation: false, transparent: true, vertexColors: true, blending: THREE.AdditiveBlending } );
 		demo2.material.color.setHSL( 1.0, 0.3, 0.7 );
 		demo2.particles = new THREE.ParticleSystem( demo2.geometry, demo2.material );
-		//demo2.particles.sortParticles = true;
+		demo2.particles.sortParticles = true;
 		scene.add( demo2.particles );
     }
+	camera.position.z = 100*Math.sin(time/2000.0);
+	demo2.particles.rotation.x += 0.01;
+	demo2.particles.rotation.y -= 0.01;
+	var temp = 5000;
+	while(temp--){
+		var par = demo2.geometry.vertices[temp];
+		if (par.y < -1000) {
+			par.y = 1000;
+			par.velocity.y = 0;
+		}
+		if(par.x < -1000){
+			par.x = 1000;
+			par.velocity.x = 0;
+		}
+		par.velocity.x -= Math.random() * 0.3;
+		par.velocity.y -= Math.random() * 0.3;
+		par.x += par.velocity.x;
+		par.y += par.velocity.y;
+	}
+	demo2.particles.geometry.__dirtyVertices =true;
   }
   requestAnimationFrame(render);
   renderer.render(scene, camera);
