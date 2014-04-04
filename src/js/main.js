@@ -11,10 +11,10 @@ $('body').append(renderer.domElement);
 
 /* Geometries */
 var geometries = {
-  'cube': new THREE.CubeGeometry(1, 1, 1),
-  'sphere': new THREE.SphereGeometry(1)
+  'cube': new THREE.CubeGeometry(2, 2, 2),
+  'sphere': new THREE.SphereGeometry(1.5),
+  'cylinder': new THREE.CylinderGeometry(1, 1, 3, 32)
 };
-// var modelGeom = ...
 
 /* Shaders */
 var vertexShaders = {
@@ -28,7 +28,7 @@ var fragmentShaders = {
 };
 
 /* Mesh */
-var geometry = new THREE.CubeGeometry(1, 1, 1);
+var geometry = geometries['cube'];
 var uniforms = {
   time: { type: "f", value: 1.0 },
   resolution: { type: "v2", value: new THREE.Vector2() }

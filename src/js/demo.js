@@ -16,33 +16,11 @@ window.onresize = function(event) {
     renderer.setSize(width, height);
 };
 
-/* Geometries */
-var geometries = {
-  'cube': new THREE.CubeGeometry(1, 1, 1),
-  'sphere': new THREE.SphereGeometry(1)
-};
-
-/* Shaders */
-var vertexShaders = {
-  vshader1: $('#vertexShader1').html()
-};
-
-var fragmentShaders = {
-  fshader1: $('#fragmentShader1').html()
-};
-
 /* Mesh */
-var geometry = new THREE.CubeGeometry(1, 1, 1);
 var uniforms = {
   time: { type: "f", value: 1.0 },
   resolution: { type: "v2", value: new THREE.Vector2(width, height) }
 };
-var material = new THREE.ShaderMaterial({
-  uniforms: uniforms,
-  vertexShader: vertexShaders['vshader1'],
-  fragmentShader: fragmentShaders['fshader1']
-});
-var model = new THREE.Mesh(geometry, material);
 
 camera.position.x = 5;
 camera.position.z = 5;
@@ -152,7 +130,7 @@ function render() {
       demo1.cubes[i].position.multiplyScalar(displacement_r);
     }
 
-  } else if (time < 400000000.0) {
+  } else {
     if (!demo2_inited) {  // Init
       demo2_inited = true;
       // Clear scene
