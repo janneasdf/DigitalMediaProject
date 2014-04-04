@@ -152,7 +152,7 @@ function render() {
       demo1.cubes[i].position.multiplyScalar(displacement_r);
     }
 
-  } else if (time < 40000.0) {
+  } else if (time < 400000000.0) {
     if (!demo2_inited) {  // Init
       demo2_inited = true;
       // Clear scene
